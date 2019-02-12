@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Signup = mongoose.model('userSignup');
+const User = mongoose.model('user');
 
 module.exports = app => {
 
@@ -14,8 +14,8 @@ module.exports = app => {
 
         const { email, password } = req.body;
 
-        const signup = new Signup({email, password});
-        signup.save();
+        const user = new User({email, password});
+        user.save();
 
         // console.log(req.body)
         res.send(req.body);
