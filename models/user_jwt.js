@@ -6,7 +6,7 @@ const _ = require('lodash');
 
 const { Schema } = mongoose;
 
-const User_JWT_Schema = new Schema({
+const userSchema = new Schema({
 
     email: {
         type: String,
@@ -29,8 +29,8 @@ const User_JWT_Schema = new Schema({
     tokens: [
         {
             access: {
-            type: String,
-            required: true
+                type: String,
+                required: true
             },
             token: {
                 type: String,
@@ -41,8 +41,20 @@ const User_JWT_Schema = new Schema({
 
 });
 
+userSchema.methods.toJSON = function() {
+
+    console.log("toJSON user: ", this);
+
+    const user = this;
+
+    const backToUser = user.toObject();
+
+    return _.pick(backToUser, ["_id", "email"]);
+
+};
+
 // identify a valid password
-User_JWT_Schema.method.comparePassword = function(candidatePassword) {
+userSchema.methods.comparePassword = function(candidatePassword) {
     
     const user = this;
 
@@ -60,47 +72,70 @@ User_JWT_Schema.method.comparePassword = function(candidatePassword) {
 
 }
 
+
 // jwt and isEmail
-User_JWT_Schema.method.generateAuthToken = function() {
+userSchema.methods.generateAuthToken = function () {
 
     const user = this;
-
-    const access = 'joon';
     
-    const token = jwt
-        .sign({ _id: user._id.toHexString(), access}, process.env.JWT_SECRET)
+    const access = 'xxxx';
+
+    let token;
+    
+    try {
+
+        token = jwt
+        .sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET)
         .toString();
+         
+        // it is like 'this.tokens'. It can be added and modified anywhere in a class.
+        // Do not confused. 
+        console.log('user at gnerateAuthToken: ', user);
+        this.tokens = user.tokens.concat([{access, token}]);
+        
+        return user.save().then(() => {
+            return token;
+        });
 
-    user.tokens = user.tokens.concat([access, token]);
-
-    return user.save().then(() => {
-        return token;
-    });
+    } catch(e) {
+        
+        return Promise.reject();
+    } 
 
 }
 
-User_JWT_Schema.statics.findByToken = function(token) {
+userSchema.statics.findByToken = function(token, callback) {
     
     const User = this;
 
     let decoded;
 
     try {
+        
         decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     } catch(e) {
+
         return Promise.reject();
     }
 
-    return User_JWT_Schema.findOne({
+    return User.findOne({
         _id: decoded._id,
-        "tokens.access": "joon", 
+        "tokens.access": decoded.access, 
         "tokens.token": token
+    }, (err, user) => {
+        
+        console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk : ', user);
+        callback(user);
+        
+        if(err) throw new Error('Operation error occurred.');
+
     });
 
 } 
 
 //.pre : it always runs before the data stores
-User_JWT_Schema.pre('save', function(next){
+userSchema.pre('save', function(next){
 
     const user = this;
 
@@ -125,4 +160,4 @@ User_JWT_Schema.pre('save', function(next){
     })
 });
 
-module.exports = mongoose.model('user', User_JWT_Schema);
+module.exports = mongoose.model('user', userSchema);

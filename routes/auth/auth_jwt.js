@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
+const { signup } = require('../../services/passport_auth');
 const User = mongoose.model('user');
 
 module.exports = app => {
@@ -10,15 +12,42 @@ module.exports = app => {
 
     });   
 
-    app.post('/signup', (req, res) => {
+    app.post('/signup', async (req, res) => {
 
-        const { email, password } = req.body;
+        // Option 1) using graphQL only
+        return signup({email: req.body.email, password:req.body.password, req})
+            .then(result => {
+                console.log('result: ^^^^^^^^^^^^^^^^^', result);
+                res.send(result);
+            });
 
-        const user = new User({email, password});
-        user.save();
+            
+        // Option 2) using graphql and express router togeter 
+        // --------------------------------------------------------------------
+        // const body = _.pick(req.body, ['email', 'password']); 
 
-        // console.log(req.body)
-        res.send(req.body);
+        // const user = new User(body);
+
+        // try {
+
+        //     // [ES7]
+        //     await user.save();
+        //     const token = await user.generateAuthToken();
+        //     await res.header('x-auth', token).send(user);
+
+        //     // [ES5]
+        //     // return user.save().then(() => {
+        //     //     return user.generateAuthToken();     
+        //     // }).then(token => {
+        //     //     res.header('x-auth', token).send(user);
+        //     // });
+
+
+        // } catch(e) {
+
+        //     res.status('400').send('Error code: 400');
+        // }
+        // ---------------------------------------------------------------------
 
     });
 

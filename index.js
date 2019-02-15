@@ -2,6 +2,8 @@ const express = require('express');
 const bodyPaerser = require('body-parser');
 const hbs = require('express-handlebars'); 
 const mongoose = require('mongoose');
+
+// in order to 'config' session
 const session = require('express-session');
 const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
@@ -23,19 +25,23 @@ require('./models/user_jwt');
 // app.use(bodyPaerser.urlencoded({ extended: false }));
 app.use(bodyPaerser.json());
 
-// store id and compare ids only?
+// config session eventually to store the session data on mongodb
 app.use(session({
     resave:true,
     saveUninitialized: true,
     secret: sessionSecret,
+    // store session data in mongoDB
     store: new MongoStore({
         url: mongoURI,
         autoReconnect: true
     })
 }));
 
+// start passport
 app.use(passport.initialize());
-app.use(passport.session());
+
+// connect passport to session
+app.use(passport.session()); 
 
 // app.use('/graphql', expressGraphQL({
     
