@@ -43,7 +43,7 @@ const userSchema = new Schema({
 
 userSchema.methods.toJSON = function() {
 
-    console.log("toJSON user: ", this);
+    // console.log("toJSON user: ", this);
 
     const user = this;
 
@@ -61,7 +61,7 @@ userSchema.methods.comparePassword = function(candidatePassword) {
     return new Promise((resolve, reject) => {
         bcrypt.compare(candidatePassword, user.password, (err, res) => {
             if(res) {
-                console.log('res: ', res);
+               //  console.log('res: ', res);
                 resolve(res);
             } else {
                 reject();
@@ -90,7 +90,7 @@ userSchema.methods.generateAuthToken = function () {
          
         // it is like 'this.tokens'. It can be added and modified anywhere in a class.
         // Do not confused. 
-        console.log('user at gnerateAuthToken: ', user);
+        // console.log('user at gnerateAuthToken: ', user);
         this.tokens = user.tokens.concat([{access, token}]);
         
         return user.save().then(() => {
@@ -104,7 +104,7 @@ userSchema.methods.generateAuthToken = function () {
 
 }
 
-userSchema.statics.findByToken = function(token, callback) {
+userSchema.statics.findByToken = function(token) {
     
     const User = this;
 
@@ -123,14 +123,22 @@ userSchema.statics.findByToken = function(token, callback) {
         _id: decoded._id,
         "tokens.access": decoded.access, 
         "tokens.token": token
-    }, (err, user) => {
-        
-        console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk : ', user);
-        callback(user);
-        
-        if(err) throw new Error('Operation error occurred.');
+    }).then(user => { 
+        console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk', user);
 
-    });
+        return user;
+    })
+    
+    // }, (err, user) => {
+    //     if(err) throw new Error('Operation error occurred.');
+
+    //     console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk', user)
+    //     return user;
+    // }).then(user => {
+
+    //     console.log('ddddddddddddddddddddddddddddddddddddddddddd: ', user)
+    //     return user;
+    // })
 
 } 
 

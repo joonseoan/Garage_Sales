@@ -19,7 +19,7 @@ passport.serializeUser((user, done) => {
             '$2a$10$4y9NgGy9pad/WIYYKtFQhePv.C3nOO8WWFADs64hwIOw3rzhzjx82',
         __v: 0 }
     */
-    console.log('user at serializeUser: ', user);
+    // console.log('user at serializeUser: ', user);
 
     // ********** it delivers user.id to the first parameter of deserializeUser******
     done(null, user.id);
@@ -32,7 +32,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
 
     // id: 5c63682ec1815c1df0bdb0da
-    console.log(id);
+    // console.log(id);
 
     // When this finds 'user' in MongoDB
     User.findById(id, (err, user) => {
@@ -51,7 +51,7 @@ passport.deserializeUser((id, done) => {
 // However, we do not need to define 'passwordField' here. 
 passport.use(new LocalStrategy({ usernameField: 'email'}, (email, password, done) => {
 
-    console.log('ddddddddddddddddddddddddddddddddddddddddd')
+    // console.log('ddddddddddddddddddddddddddddddddddddddddd')
 
     // User: find a document out of all documents.
     User.findOne( { email: email.toLowerCase() }, (err, user) => {
@@ -89,7 +89,7 @@ passport.use(new LocalStrategy({ usernameField: 'email'}, (email, password, done
                         '$2a$10$4y9NgGy9pad/WIYYKtFQhePv.C3nOO8WWFADs64hwIOw3rzhzjx82',
                     __v: 0 }
                 */
-                console.log('user at comparePassword in LocalStrategy: ', user);
+                // console.log('user at comparePassword in LocalStrategy: ', user);
                 
                 // 'user' is delivered to serializeUser as a parameter as shown above
                 return done(null, user);
@@ -129,33 +129,35 @@ exports.signup = function ({email, password, req}) {
             })
             .then(user => {
                 
-                let newUser;
-
                 if(!user.tokens.length === 0) throw new Error('Token is not available');
                 
                 const token = user.tokens[user.tokens.length-1].token;
 
-                const aaa = function() {
-                    newUser = 'dddddd';
-                }
+                // const ddd = User.findByToken(token, (newUser => {
+                //     if(!newUser) return Promise.reject();
+                //     return newUser;
+                // }))                
 
-                // console.log('NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN: ', newUser);
-                
-                // User.findByToken(token, (user => {
-                //      newUser = user;
-                // }));
-                
-                // console.log(new)
-                
+                return User.findByToken(token)
+                    .then((newUser) => {
 
-                return new Promise((resolve, reject) => {
-    
-                    req.login(user, err => {
-                        if(err) reject(err);
-                        resolve(user);
+                        if(newUser) {
+
+                            console.log('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn: ', newUser)
+
+                            return new Promise((resolve, reject) => {
+        
+                                req.login(user, err => {
+                                    if(err) reject(err);
+                                    resolve(user);
+                                });
+                
+                            });
+                        }
                     });
-    
-                });
+                // console.log('adfdadsadfafdasfafasfasfasfasfasfafasfafafasfdasdfa', ddd);
+
+                
 
                                 
     
