@@ -20,7 +20,7 @@ if (!mongoURI) {
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoURI, { useCreateIndex: true, useNewUrlParser: true });
 
-require('./models/user_jwt');
+require('./models/users/users_helpers');
 
 // app.use(bodyPaerser.urlencoded({ extended: false }));
 app.use(bodyPaerser.json());

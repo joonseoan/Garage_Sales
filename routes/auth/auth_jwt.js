@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const _ = require('lodash');
 
-const { signup } = require('../../services/passport_auth');
-const User = mongoose.model('user');
+const { signup, login } = require('../../services/passport_auth');
+// const Users = mongoose.model('users');
 
 module.exports = app => {
 
@@ -14,12 +14,17 @@ module.exports = app => {
 
     app.post('/signup', async (req, res) => {
 
-        // Option 1) using graphQL only
-        return signup({email: req.body.email, password:req.body.password, req})
-            .then(result => {
-                console.log('result: ^^^^^^^^^^^^^^^^^', result);
-                res.send(result);
-            });
+        try {
+
+            // Option 1) using graphQL only
+            const result =  await signup({email: req.body.email, password:req.body.password, req})
+            res.send(result);
+                    
+        } catch(e) {
+
+            res.status('400').send();
+
+        }
 
             
         // Option 2) using graphql and express router togeter 
@@ -48,6 +53,23 @@ module.exports = app => {
         //     res.status('400').send('Error code: 400');
         // }
         // ---------------------------------------------------------------------
+
+    });
+
+    app.post('/login', async (req, res) => {
+
+        const { email, password } = req.body;
+
+        try {
+
+            const result = await login({ email, password, req});
+            res.send(result);
+
+        } catch(e) {
+
+            res.status('400').send();
+
+        }
 
     });
 
