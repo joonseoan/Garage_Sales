@@ -20,20 +20,14 @@ module.exports = async function ({email, password, req}) {
         // if(user.tokens.length === 0) throw new Error();
         if(user.tokens.length === 0) throw new Error('Token is not available');        
         
-        const token = await user.tokens[user.tokens.length-1].token;
-        const newUser = await Users.findByToken(token);
+        return new Promise((resolve, reject) => {
 
-        // need to modify await later on
-        if(newUser) {
-            return new Promise((resolve, reject) => {
-
-                req.login(user, err => {
-                    if(err) reject(err);
-                    resolve(user);
-                });
-
+            req.login(user, err => {
+                if(err) reject(err);
+                resolve(user);
             });
-        }
+
+        });
 
     } catch(e) {
 

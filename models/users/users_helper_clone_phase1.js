@@ -91,6 +91,7 @@ userSchema.statics.findByToken = async function(token) {
         throw new Error('Unable to find the identified token.');
     }
     
+    // old version
     // return User.findOne({
     //     _id: decoded._id,
     //     "tokens.access": decoded.access, 
@@ -103,20 +104,25 @@ userSchema.statics.findByToken = async function(token) {
     
 } 
 
-userSchema.statics.findByCredentials = function(email) {
+userSchema.statics.findByEmail = async function(email) {
 
     const Users = this;
 
-    try {
+    const user = Users.findOne({ email });
+    if(!user) throw new Error();
+    
+    return user;
 
-        return Users.findeOne({ email, password }).then(user => {
-            if(!user) throw new Error();
-            return user;
-        });
+    // try {
 
-    } catch(e) {
-        throw new Error('Unable to find a user with the given credentials.');
-    }
+    //     return Users.findeOne({ email }).then(user => {
+    //         if(!user) throw new Error();
+    //         return user;
+    //     });
+
+    // } catch(e) {
+    //     throw new Error('Unable to find a user with the given credentials.');
+    // }
 
 }
 

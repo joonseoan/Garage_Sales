@@ -23,6 +23,14 @@ userSchema.methods.comparePassword = function(password) {
 
     try {
 
+        // By using callback 
+        // bcrypt.compare(password, user.password, (err, isMatch) => {
+            
+        //     callback(err, isMatch);
+            
+        // });
+
+        // 2) Promise
         return new Promise((resolve, reject) => {
 
             bcrypt.compare(password, user.password, (err, isMatch) => {
@@ -59,7 +67,7 @@ userSchema.methods.generateAuthToken = async function () {
         .sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET)
         .toString();
         
-        user.tokens = user.tokens.concat([{access, token}]);
+        user.tokens = await user.tokens.concat([{access, token}]);
 
         await user.save();
         
@@ -74,6 +82,8 @@ userSchema.methods.generateAuthToken = async function () {
 }
 
 userSchema.statics.findByToken = async function(token) {
+
+    // console.log('token at userSchema: ', token)
     
     const Users = this;
 
@@ -90,6 +100,7 @@ userSchema.statics.findByToken = async function(token) {
         });
 
         if(!user) throw new Error();
+        // console.log('user return at findByToken: ', user);
 
         return user;
         
@@ -99,6 +110,26 @@ userSchema.statics.findByToken = async function(token) {
     }
    
 } 
+
+// userSchema.statics.findByEmail = async function(email) {
+
+//     const Users = this;
+
+//     try {
+
+//         const user = await Users.findOne({ email });
+//         if(!user) throw new Error();
+        
+//         return user;
+
+//     } catch(e) {
+
+//         throw new Error('Unable to find the user by email.');
+
+//     }
+
+
+// }
 
 userSchema.pre('save', function(next){
 
