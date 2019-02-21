@@ -5,6 +5,7 @@ const _ = require('lodash');
 
 const userSchema = require('./users_schema');
 
+// to show data in console.
 userSchema.methods.toJSON = function() {
 
     const user = this;

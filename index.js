@@ -1,7 +1,12 @@
+
 const express = require('express');
+const mongoose = require('mongoose');
+
+// model must be up before graphql schema.
+//  Therefore, monsoose register for graphQL Schema.
+require('./models/users/users_helpers');
 const bodyPaerser = require('body-parser');
 const hbs = require('express-handlebars'); 
-const mongoose = require('mongoose');
 
 // in order to 'config' session
 const session = require('express-session');
@@ -19,8 +24,12 @@ if (!mongoURI) {
 
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoURI, { useCreateIndex: true, useNewUrlParser: true });
+mongoose.connection
+.once('open', () => { console.log('Connected to MongoDB instance.')})
+.on('error', e => { console.log(`Error connecting to MongoDB: ${e}`)});
 
-require('./models/users/users_helpers');
+const schema = require('./schema/schema');
+
 
 // app.use(bodyPaerser.urlencoded({ extended: false }));
 app.use(bodyPaerser.json());
@@ -57,6 +66,11 @@ app.get('/', (req, res) => {
 });
 
 require('./routes/auth/auth_jwt')(app);
+
+app.use('/graphql', expressGraphQL({
+    schema,
+    graphiql: true
+}));
 
 app.use(pageNotFound);
 
