@@ -6,12 +6,6 @@ const { signup, login } = require('../../services/passport_auth');
 
 module.exports = app => {
 
-    app.get('/signup', (req, res) => {
-
-        res.send('<h1>Working</h1>');
-
-    });   
-
     app.post('/signup', async (req, res) => {
 
         /* 
@@ -23,7 +17,8 @@ module.exports = app => {
         try {
 
             // Option 1) using graphQL only
-            const result =  await signup({email: req.body.email, password:req.body.password, req})
+            const result =  await signup({email: req.body.email, password: req.body.password, req});
+
             res.send(result);
                     
         } catch(e) {
@@ -75,17 +70,15 @@ module.exports = app => {
         try {
 
             const user = req.user;
-            if(!user) throw new Error();
+            if(!user) throw new Error('You did not sign in.');
             req.logout();
             res.send(user);
 
         } catch(e) {
 
             res.status('400').send();
-            // throw new Error ('No logged in user')
         
         }
-
 
     });
 

@@ -60,18 +60,12 @@ userSchema.methods.generateAuthToken = async function () {
         .sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET)
         .toString();
         
-        const Tokens = mongoose.model('tokens');
-
-        // Do not be confused with pure mongodb.
-        // In MongoDB, we need to separately deal with class instance and database.
-        //  However, in mongoose, we just need to manipulate class intance(Schema)
-        //  then the schema will directly manage database.
-        const newToken = await new Tokens({token, access, user: user._id }).save();
-
-        user.tokens = [ ...user.tokens, newToken._id ];
+        user.tokens = user.tokens.concat([{access, token}]);
 
         await user.save();
-            
+        
+        // return token;
+    
     } catch(e) {
         
         throw new Error('Unable to generate jwt and save the user.');
@@ -107,7 +101,7 @@ userSchema.statics.findByToken = async function(token) {
    
 } 
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function(next){
 
     const user = this;
 
@@ -116,6 +110,7 @@ userSchema.pre('save', function(next) {
         if(!user.isModified('password')) { 
             
             next();
+    
             throw new Error();
 
         }

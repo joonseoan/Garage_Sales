@@ -4,19 +4,12 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const Users = mongoose.model('users');
 
-
 // only when signup/login, token is stored in session
-passport.serializeUser(async (user, done) => {
+passport.serializeUser((user, done) => {
 
-    const tokenId = user.tokens[user.tokens.length-1];
-    
-    const Tokens = mongoose.model('tokens');
-    
-    const token = await Tokens.findToken(user._id, tokenId);
+    console.log('token at user: ', user);
+    const { token } = user.tokens[user.tokens.length-1];
 
-    console.log('token:  ===============> ', token);
-
-    
     done(null, token);
 
 });
@@ -28,9 +21,9 @@ passport.deserializeUser( async (token, done) => {
     
     try {
 
-        // const user = await Users.findByToken(token);
-        // if(!user) throw new Error();
-        // done(null, user);
+        const user = await Users.findByToken(token);
+        if(!user) throw new Error();
+        done(null, user);
 
     } catch(e) {
 
