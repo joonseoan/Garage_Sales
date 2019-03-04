@@ -14,7 +14,6 @@ const expressGraphQL = require('express-graphql');
 const { mongoURI, sessionSecret } = require('./config/dev');
 const { pageNotFound } = require('./controllers/pageNotFound');
 
-
 // model must be up before graphql schema.
 //  Therefore, monsoose register for graphQL Schema.
 // require('./models/users/users_helpers');

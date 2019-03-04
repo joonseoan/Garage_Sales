@@ -57,6 +57,13 @@ module.exports = app => {
 
     });
 
+    app.get('/me', (req, res) => {
+
+        res.send(req.user);
+        
+
+    });
+
     app.get('/logout', (req, res) => {
 
         /*

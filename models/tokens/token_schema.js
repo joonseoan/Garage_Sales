@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const jwt = require('jsonwebtoken');
  
 const tokenSchema = new Schema({
     
@@ -16,47 +17,57 @@ const tokenSchema = new Schema({
     }
 });
 
-// tokenSchema.statics.getToken = async (token_id) => {
-
-//     const Tokens = this;
-
-//     try {
-
-//         // over stack call? Please test it... and raise a question to steve!!!
-//         // const Tokens = mongoose.model('tokens');
-
-//         const TokenList = await Tokens.findById(token_id);
-//         const { token } = TokenList;
-        
-//         return token;
-
-//     } catch(e) {
-
-//         throw new Error('Unable to find the token list.');
-
-//     }
-    
-// }
-
-tokenSchema.statics.findToken = function(userId, tokenId) {
+tokenSchema.statics.findToken = async function(userId, tokenId) {
 
     const Tokens = this;
 
-    return Tokens
-        // check out next or to toArray() ==> none of them is required.
-        .find({ user: userId })
-        .then(tokens => {
+    try {
 
-            return tokens.find(tokenData => {
-                console.log(tokenData._id)
-                console.log(tokenId)
-              if(tokenData._id.toString() === tokenId.toString()) {
-                  return tokenData.token;
-              }
-          });
-        })
-        .catch(e => { throw new Error('Unable to get token.'); });
-  
+        const tokens = await Tokens.find({ user: userId });
+    
+        return tokens.find(tokenData => {
+            if(tokenData._id.toString() === tokenId.toString())
+            return tokenData.token;
+        });
+
+    } catch(e) {
+
+        throw new Error('Unable to get your token.');
+
+    }
+
+}
+
+tokenSchema.statics.findUserByToken = async function(token) {
+
+    const Tokens = this;
+
+    let decoded;
+
+    try {
+
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const userToken = await Tokens.findOne({
+            token, 
+            access: decoded.access,
+            user: decoded._id 
+        });
+
+        const Users = mongoose.model('users');
+
+        const user = await Users.findById(userToken.user);
+        
+        if(!user) throw new Error();
+
+        return user;
+
+    } catch(e) {
+
+        throw new Error('Unable to find User by the token given.');
+
+    }
+
 }
 
 mongoose.model('tokens', tokenSchema);

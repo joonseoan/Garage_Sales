@@ -3,6 +3,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const Users = mongoose.model('users');
+const Tokens = mongoose.model('tokens');
 
 
 // only when signup/login, token is stored in session
@@ -12,25 +13,22 @@ passport.serializeUser(async (user, done) => {
     
     const Tokens = mongoose.model('tokens');
     
-    const token = await Tokens.findToken(user._id, tokenId);
-
-    console.log('token:  ===============> ', token);
-
+    const { token } = await Tokens.findToken(user._id, tokenId);
     
     done(null, token);
 
 });
 
-// only when using session
+// only when using session authentication and logout
 // first parameter "token / id when it uses 'id' " is from session storage 
 //      which is stored in serializeUser when the user signed up
 passport.deserializeUser( async (token, done) => {
     
     try {
 
-        // const user = await Users.findByToken(token);
-        // if(!user) throw new Error();
-        // done(null, user);
+        const user = await Tokens.findUserByToken(token);
+        if(!user) throw new Error();
+        done(null, user);
 
     } catch(e) {
 
@@ -52,10 +50,9 @@ passport.use(new LocalStrategy({ usernameField: 'email'}, async (email, password
     
     if(validPasswordUser) {
 
-        const token = await validPasswordUser.generateAuthToken();
-        const loginSuccessUser = await Users.findByToken(token);
+        await validPasswordUser.generateAuthToken();
 
-        return done(null, loginSuccessUser); 
+        return done(null, validPasswordUser); 
 
     }
 
@@ -63,42 +60,6 @@ passport.use(new LocalStrategy({ usernameField: 'email'}, async (email, password
     
 }));
 
-
-// async function signup ({email, password, req}) {
-
-//     try {
-
-//         // if(!email || !password) throw new Error();
-//         if(!email || !password) throw new Error('You must provide an email and password');
-//         const user = new Users({email, password});
-        
-//         const existingUser = await Users.findOne({ email });
-        
-//         // if(existingUser) throw new Error();
-//         if(existingUser) throw new Error('Email in use.');
-
-//         await user.save();
-//         await user.generateAuthToken();
-
-//         // if(user.tokens.length === 0) throw new Error();
-//         if(user.tokens.length === 0) throw new Error('Token is not available');        
-        
-//         return new Promise((resolve, reject) => {
-
-//             req.login(user, err => {
-//                 if(err) reject(err);
-//                 resolve(user);
-//             });
-
-//         });
-
-//     } catch(e) {
-
-//         throw new Error('Unable to get user with jwt and passport');
-    
-//     }
-       
-// }
 
 exports.login = function ({ email, password, req }) {
 
@@ -115,7 +76,7 @@ exports.login = function ({ email, password, req }) {
             if (!user) { reject('Invalid credentials.') }
  
             // step3 : delivering user to serializeUser to create User by using req.login()
-            // step 4: if req.user is successfully created, it return user to the invocker
+            // step 4: if req.user is successfully stored in serializeuser, it return user to the invocker
             req.login(user, () => resolve(user));
                   
       // step 1.: deliver email and password to local strategy

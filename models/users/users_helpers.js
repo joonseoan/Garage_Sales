@@ -80,32 +80,6 @@ userSchema.methods.generateAuthToken = async function () {
     
 }
 
-userSchema.statics.findByToken = async function(token) {
-    
-    const Users = this;
-
-    let decoded;
-
-    try {
-        
-        decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        const user = await Users.findOne({
-            _id: decoded._id,
-            "tokens.access": decoded.access, 
-            "tokens.token": token
-        });
-
-        if(!user) throw new Error();
-
-        return user;
-        
-    } catch(e) {
-        
-        throw new Error('Unable to find the identified token.');
-    }
-   
-} 
 
 userSchema.pre('save', function(next) {
 
