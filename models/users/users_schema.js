@@ -24,13 +24,12 @@ const userSchema = new Schema({
         // min: 8
     },
     // must be object type inside of an array
-    tokens: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'tokens'
-        }    
-    ]
-
+    // It will not assign another object field inside of the object in this arry**********
+    tokens: [{
+        type: Schema.Types.ObjectId,
+        ref: 'tokens'
+    }]    
+    
 });
 
 module.exports = userSchema;

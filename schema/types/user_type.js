@@ -1,35 +1,43 @@
-// const mongoose = require('mongoose');
-// const Users = mongoose.model('users');
-// const graphql = require('graphql');
-// const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList } = graphql;
+const mongoose = require('mongoose');
+const graphql = require('graphql');
+const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList } = graphql;
 
-// // UserType: instance of GraphQLObjecType for javascript
-// const UserType = new GraphQLObjectType({
+const TokenType = require('./token_type');
+const Users = mongoose.model('users');
 
-//     //'UserType' here for name stored in graphql's memory space
-//     name: 'UserType',
+// UserType: instance of GraphQLObjecType 
+//  for javascript to export / import particularly here.
+const UserType = new GraphQLObjectType({
 
-//     // It defines which elements return when doing qury and mutation
-//     // Then the query and muation are able to narrowdown the elements required
-//     //  again.
-//     fields: () => ({
+    //'UserType' here for name stored in graphql's memory space
+    name: 'UserType',
 
-//         id: { type: GraphQLID },
-//         email: { type: GraphQLString },
-//         password: { type: GraphQLString }
-//         // tokens : {
-//         //     type : { },
-//         //     resolve({id}) {
-//         //         return Users.findById(id)
-//         //             .then(user => {
-//         //                 return user.tokens;
-//         //             });
-//         //     }
-//         // }
-//         // tokens:  { type : new GraphQLList() }
-    
-//     })
+    // It defines which elements return when doing qury and mutation
+    // Then the query and muation in front-end are able to narrowdown 
+    //  the elements required again.
 
-// });
+    // **************** must be identified with all or partly fields of mongoose schema
+    //  which is a document of mongodb ***************************************
+    fields: () => ({
 
-// module.exports = UserType;
+        id: { type: GraphQLID },
+        email: { type: GraphQLString },
+        //password: { type: GraphQLString }
+        tokens:  { 
+
+            // I thin role of GraphQLList here "mpa()""
+            type : new GraphQLList(TokenType),
+            resolve(parentValue) {
+                return Users.
+                        findById(parentValue.id)
+                        .populate('tokens')
+                        .then(user => user.tokens)
+                        .catch(e => { throw new Error('Unable to get token list.'); });
+            } 
+        }
+
+    })
+
+});
+
+module.exports = UserType;

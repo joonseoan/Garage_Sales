@@ -5,12 +5,11 @@ const LocalStrategy = require('passport-local').Strategy;
 const Users = mongoose.model('users');
 const Tokens = mongoose.model('tokens');
 
-
 // only when signup/login, token is stored in session
 passport.serializeUser(async (user, done) => {
 
     const tokenId = user.tokens[user.tokens.length-1];
-    
+    console.log(tokenId)    
     const Tokens = mongoose.model('tokens');
     
     const { token } = await Tokens.findToken(user._id, tokenId);
@@ -42,6 +41,7 @@ passport.deserializeUser( async (token, done) => {
 passport.use(new LocalStrategy({ usernameField: 'email'}, async (email, password, done) => {
 
     const validEmailuser = await Users.findOne({ email: email.toLowerCase() });
+    
     if(!validEmailuser) return done(null, false, 'Invalid Credentials');
     
     const validPasswordUser = await validEmailuser.comparePassword(password);
@@ -52,6 +52,7 @@ passport.use(new LocalStrategy({ usernameField: 'email'}, async (email, password
 
         await validPasswordUser.generateAuthToken();
 
+        // it returns validPasswordUser to passport.authenticate's call parameter
         return done(null, validPasswordUser); 
 
     }

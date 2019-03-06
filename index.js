@@ -24,6 +24,7 @@ const { pageNotFound } = require('./controllers/pageNotFound');
 // model must be prior to Schema.
 require('./models');
 
+// activate passport
 require('./services/passport_auth');
 
 const schema = require('./schema/schema');
@@ -36,7 +37,6 @@ mongoose.Promise = global.Promise;
 mongoose.connect(mongoURI, { useCreateIndex: true, useNewUrlParser: true });
 mongoose.connection
     .once('open', () => {
-
         console.log('Connected to MongoDB instance.');
         app.listen(4000, () => {
             console.log('Listening');

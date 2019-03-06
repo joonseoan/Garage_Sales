@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const jwt = require('jsonwebtoken');
- 
+
 const tokenSchema = new Schema({
     
     token: {
