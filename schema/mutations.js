@@ -18,17 +18,19 @@ const mutation = new GraphQLObjectType({
             type: UserType,
             args: {
                 email: { type: GraphQLString },
-                password: { type: GraphQLString }
+                password: { type: GraphQLString },
+                firstName: { type: GraphQLString },
+                lastName: { type: GraphQLString }
             },
     
             // req: it is same as request from the client.
             
             // 2) es2016
-            resolve(parentValue, { email, password }, req) {
+            resolve(parentValue, { email, password, firstName, lastName }, req) {
             // 1) es5 
             // resolve(parentValue, args, req) {
 
-                return signup({ email, password, req }); 
+                return signup({ email, password, firstName, lastName, req }); 
             }
         },
         logout: {

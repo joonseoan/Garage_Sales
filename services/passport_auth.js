@@ -9,7 +9,7 @@ const Tokens = mongoose.model('tokens');
 passport.serializeUser(async (user, done) => {
 
     const tokenId = user.tokens[user.tokens.length-1];
-    console.log(tokenId)    
+
     const Tokens = mongoose.model('tokens');
     
     const { token } = await Tokens.findToken(user._id, tokenId);

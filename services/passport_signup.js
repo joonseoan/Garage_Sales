@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const Users = mongoose.model('users');
 
-module.exports = async function ({ email, password, req }) {
+module.exports = async function ({ email, password, firstName, lastName, req }) {
 
     try {
 
         // if(!email || !password) throw new Error();
-        if(!email || !password) throw new Error('You must provide an email and a password');
+        if(!email || !password || !firstName || !lastName) throw new Error('You must provide an email and a password');
         
         const existingUser = await Users.findOne({ email });
         
@@ -15,7 +15,7 @@ module.exports = async function ({ email, password, req }) {
         if(existingUser) throw new Error('The email already exists.');
         
         // use user model
-        const user = await new Users({ email, password }).save();
+        const user = await new Users({ email, password, firstName, lastName }).save();
         
         // use token model
         await user.generateAuthToken();

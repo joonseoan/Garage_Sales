@@ -16,4 +16,3 @@ const TokenType = new GraphQLObjectType({
 });
 
 module.exports = TokenType;
-

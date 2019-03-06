@@ -19,9 +19,18 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
+        trim: true,
+        min: 8
+    },
+    firstName: {
+        type: String,
+        required: true,
         trim: true
-        // will add this later on
-        // min: 8
+    },
+    lastName: {
+        type: String,
+        required: true,
+        trim: true
     },
     // must be object type inside of an array
     // It will not assign another object field inside of the object in this arry**********
@@ -29,7 +38,6 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'tokens'
     }]    
-    
 });
 
 module.exports = userSchema;

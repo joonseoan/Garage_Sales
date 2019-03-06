@@ -23,6 +23,8 @@ const UserType = new GraphQLObjectType({
         id: { type: GraphQLID },
         email: { type: GraphQLString },
         //password: { type: GraphQLString }
+        firstName: { type: GraphQLString },
+        lastName: { type: GraphQLString },
         tokens:  { 
 
             // I thin role of GraphQLList here "mpa()""
@@ -33,7 +35,8 @@ const UserType = new GraphQLObjectType({
                         .populate('tokens')
                         .then(user => user.tokens)
                         .catch(e => { throw new Error('Unable to get token list.'); });
-            } 
+            }
+
         }
 
     })
