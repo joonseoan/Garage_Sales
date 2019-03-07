@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-
 const bodyPaerser = require('body-parser');
 const hbs = require('express-handlebars'); 
 
@@ -10,6 +9,7 @@ const session = require('express-session');
 const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
 const expressGraphQL = require('express-graphql');
+const cors = require('cors');
 
 const { mongoURI, sessionSecret } = require('./config/dev');
 const { pageNotFound } = require('./controllers/pageNotFound');
@@ -71,6 +71,7 @@ app.engine('hbs', hbs({ extname: 'hbs' }))
 app.set('view engine', 'hbs');
 // app.set('views', 'views');
 
+app.use(cors());
 app.get('/', (req, res) => {
     res.send('<h1>Home Page</h1>');
 });
