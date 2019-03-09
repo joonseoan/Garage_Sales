@@ -8,11 +8,15 @@ const Tokens = mongoose.model('tokens');
 // only when signup/login, token is stored in session
 passport.serializeUser(async (user, done) => {
 
+    console.log('user in serializeUser ======================>', user)
+
     const tokenId = user.tokens[user.tokens.length-1];
 
     const Tokens = mongoose.model('tokens');
     
     const { token } = await Tokens.findToken(user._id, tokenId);
+
+    console.log('token in serializeUser: ', token);
     
     done(null, token);
 
@@ -25,7 +29,9 @@ passport.deserializeUser( async (token, done) => {
     
     try {
 
+        console.log('token in deserializeUser: ', token)
         const user = await Tokens.findUserByToken(token);
+        console.log('user in deserializeUser: ', user)
         if(!user) throw new Error();
         done(null, user);
 
@@ -85,9 +91,4 @@ exports.login = function ({ email, password, req }) {
     });
 }
 
-
-
-// module.exports = { signup, login };
-
 exports.signup = require('./passport_signup');
-// exports.login = require('./passport_login');

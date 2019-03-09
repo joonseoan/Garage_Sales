@@ -6,7 +6,6 @@ const UserType = require('./user_type');
 // Only things required to get in the authentication app are username(email) and password.
 // no tokens to the client!
 const RootQueryType = new GraphQLObjectType({
-
     // RootQueryName registers for GraphQL query
     name: 'RootQueryType',
     fields: () => ({

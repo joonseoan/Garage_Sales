@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+
 const mongoose = require('mongoose');
 const bodyPaerser = require('body-parser');
 const hbs = require('express-handlebars'); 
@@ -9,7 +10,12 @@ const session = require('express-session');
 const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
 const expressGraphQL = require('express-graphql');
-const cors = require('cors');
+
+// Not easily working: we should use proxy,*****************************
+//  if the client and the server hosts are different.
+// cors is not able to set-Cookie value in response.
+//  because the client accesses to /graphql before the server 
+// const cors = require('cors');
 
 const { mongoURI, sessionSecret } = require('./config/dev');
 const { pageNotFound } = require('./controllers/pageNotFound');
@@ -39,7 +45,7 @@ mongoose.connection
     .once('open', () => {
         console.log('Connected to MongoDB instance.');
         app.listen(4000, () => {
-            console.log('Listening');
+            console.log('Listening to the client.');
         }); 
     })
     .on('error', e => { console.log(`Error connecting to MongoDB: ${e}`)});
@@ -71,12 +77,11 @@ app.engine('hbs', hbs({ extname: 'hbs' }))
 app.set('view engine', 'hbs');
 // app.set('views', 'views');
 
-app.use(cors());
 app.get('/', (req, res) => {
     res.send('<h1>Home Page</h1>');
 });
 
-require('./routes/auth/auth_jwt')(app);
+// require('./routes/auth/auth_jwt')(app);
 
 app.use('/graphql', expressGraphQL({
     schema,

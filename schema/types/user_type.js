@@ -24,20 +24,20 @@ const UserType = new GraphQLObjectType({
         email: { type: GraphQLString },
         //password: { type: GraphQLString }
         firstName: { type: GraphQLString },
-        lastName: { type: GraphQLString },
-        tokens:  { 
+        lastName: { type: GraphQLString }
+        // tokens:  { 
 
-            // I thin role of GraphQLList here "mpa()""
-            type : new GraphQLList(TokenType),
-            resolve(parentValue) {
-                return Users.
-                        findById(parentValue.id)
-                        .populate('tokens')
-                        .then(user => user.tokens)
-                        .catch(e => { throw new Error('Unable to get token list.'); });
-            }
+        //     // I thin role of GraphQLList here "mpa()""
+        //     type : new GraphQLList(TokenType),
+        //     resolve(parentValue) {
+        //         return Users.
+        //                 findById(parentValue.id)
+        //                 .populate('tokens')
+        //                 .then(user => user.tokens)
+        //                 .catch(e => { throw new Error('Unable to get token list.'); });
+        //     }
 
-        }
+        // }
 
     })
 
