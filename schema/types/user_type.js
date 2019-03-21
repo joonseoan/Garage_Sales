@@ -24,7 +24,13 @@ const UserType = new GraphQLObjectType({
         email: { type: GraphQLString },
         //password: { type: GraphQLString }
         firstName: { type: GraphQLString },
-        lastName: { type: GraphQLString }
+        lastName: { type: GraphQLString },
+        street: { type: GraphQLString },
+        city: { type: GraphQLString },
+        province: { type: GraphQLString },
+        postalCode: { type: GraphQLString },
+        telephone: { type: GraphQLString },
+        alias: { type: GraphQLString }
         // tokens:  { 
 
         //     // I thin role of GraphQLList here "mpa()""

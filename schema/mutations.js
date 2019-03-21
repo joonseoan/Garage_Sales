@@ -4,7 +4,6 @@ const { GraphQLObjectType, GraphQLString } = graphql;
 const UserType = require('./types/user_type');
 const { signup, login } = require('../services/passport_auth');
 
-
 // resolve return value is all user instance 
 //  mongoose schema has
 
@@ -18,19 +17,17 @@ const mutation = new GraphQLObjectType({
             type: UserType,
             args: {
                 email: { type: GraphQLString },
-                password: { type: GraphQLString },
-                firstName: { type: GraphQLString },
-                lastName: { type: GraphQLString }
+                password: { type: GraphQLString }
             },
     
             // req: it is same as request from the client.
             
             // 2) es2016
-            resolve(parentValue, { email, password, firstName, lastName }, req) {
+            resolve(parentValue, { email, password }, req) {
             // 1) es5 
             // resolve(parentValue, args, req) {
 
-                return signup({ email, password, firstName, lastName, req }); 
+                return signup({ email, password, req }); 
             }
         },
         logout: {

@@ -46,6 +46,43 @@ userSchema.methods.comparePassword = function(password) {
 
 }
 
+userSchema.statics.saveUser = async function(body) {
+
+    const User = this;
+    const { email, password, confirmPassword, firstName, lastName, street, city, province, postalFirst, postalSecond, telephone, alias } = body.variables;
+
+    // console.log(email, password, firstName, lastName, street, postalFirst, postalSecond, telephone, alias )
+
+    try {
+
+        const user = new User({
+            email,
+            password,
+            firstName,
+            lastName,
+            street,
+            city, 
+            province,
+            postalCode: postalFirst + postalSecond,
+            telephone,
+            alias
+        });
+
+        return await user.save();
+        // console.log(user)
+
+        // const newUser =  await user.save();
+
+        // console.log('newUser: ', newUser)
+
+    } catch(e) {
+
+        throw new Error('Unable to save a new user');
+
+    }
+
+}
+
 userSchema.methods.generateAuthToken = async function () {
 
     const user = this;

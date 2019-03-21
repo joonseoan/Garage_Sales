@@ -2,20 +2,20 @@ const mongoose = require('mongoose');
 
 const Users = mongoose.model('users');
 
-module.exports = async function ({ email, password, firstName, lastName, req }) {
+module.exports = async function ({ email, password, req }) {
 
     try {
 
         // if(!email || !password) throw new Error();
-        if(!email || !password || !firstName || !lastName) throw new Error('You must provide an email and a password');
+        if(!email || !password) throw new Error('You must provide an email and a password');
         
         const existingUser = await Users.findOne({ email });
-        
+        // console.log(req.body);
+        console.log(existingUser)
         // if(existingUser) throw new Error();
         if(existingUser) throw new Error('The email already exists.');
-        
-        // use user model
-        const user = await new Users({ email, password, firstName, lastName }).save();
+
+        const user = await Users.saveUser(req.body);
         
         // use token model
         await user.generateAuthToken();
@@ -35,7 +35,7 @@ module.exports = async function ({ email, password, firstName, lastName, req }) 
 
     } catch(e) {
 
-        throw new Error('Email or Password you typed is not correct format.');
+        throw new Error(e);
     
     }
        
