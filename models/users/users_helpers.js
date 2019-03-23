@@ -46,42 +46,42 @@ userSchema.methods.comparePassword = function(password) {
 
 }
 
-userSchema.statics.saveUser = async function(body) {
+// userSchema.statics.saveUser = async function(body) {
 
-    const User = this;
-    const { email, password, confirmPassword, firstName, lastName, street, city, province, postalFirst, postalSecond, telephone, alias } = body.variables;
+//     const User = this;
+//     const { email, password, confirmPassword, name, address, telephone, alias } = body.variables;
 
-    // console.log(email, password, firstName, lastName, street, postalFirst, postalSecond, telephone, alias )
+//     // console.log(email, password, firstName, lastName, street, postalFirst, postalSecond, telephone, alias )
 
-    try {
+//     const copyAddress = { ...address, postalCode: `${ address.postalFirst } ${ address.postalSecond }`}
+//     copyAddress.postalFrist = undefined;
+//     copyAddress.postalSecond = undefined;
 
-        const user = new User({
-            email,
-            password,
-            firstName,
-            lastName,
-            street,
-            city, 
-            province,
-            postalCode: postalFirst + postalSecond,
-            telephone,
-            alias
-        });
+//     try {
 
-        return await user.save();
-        // console.log(user)
+//         const user = new User({
+//             email,
+//             password,
+//             name,
+//             address: copyAddress,
+//             telephone,
+//             alias
+//         });
 
-        // const newUser =  await user.save();
+//         return await user.save();
+//         // console.log(user)
 
-        // console.log('newUser: ', newUser)
+//         // const newUser =  await user.save();
 
-    } catch(e) {
+//         // console.log('newUser: ', newUser)
 
-        throw new Error('Unable to save a new user');
+//     } catch(e) {
 
-    }
+//         throw new Error('Unable to save a new user');
 
-}
+//     }
+
+// }
 
 userSchema.methods.generateAuthToken = async function () {
 
@@ -116,6 +116,13 @@ userSchema.methods.generateAuthToken = async function () {
     } 
     
 }
+
+// userSchema.methods.setCoordinats = async function(address) {
+//     const user = this;
+
+//     // const url = '',
+    
+// }
 
 
 userSchema.pre('save', function(next) {

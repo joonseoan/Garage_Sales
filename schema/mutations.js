@@ -26,6 +26,7 @@ const mutation = new GraphQLObjectType({
             resolve(parentValue, { email, password }, req) {
             // 1) es5 
             // resolve(parentValue, args, req) {
+                console.log('req.body: ', req.body)
 
                 return signup({ email, password, req }); 
             }

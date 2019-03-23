@@ -10,14 +10,22 @@ module.exports = async function ({ email, password, req }) {
         if(!email || !password) throw new Error('You must provide an email and a password');
         
         const existingUser = await Users.findOne({ email });
-        // console.log(req.body);
-        console.log(existingUser)
+    
         // if(existingUser) throw new Error();
         if(existingUser) throw new Error('The email already exists.');
 
-        const user = await Users.saveUser(req.body);
+        const { firstName, lastName, alias } = req.body.variables.user;
+
+        const user = await new Users({
+            email, 
+            password,
+            firstName,
+            lastName, 
+            alias: alias || 'Neighbor'
+        })
+        .save();
         
-        // use token model
+        //use token model
         await user.generateAuthToken();
 
         if(user.tokens.length === 0) return new Promise.reject('You failed to create your first session.');

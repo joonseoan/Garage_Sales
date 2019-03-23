@@ -16,6 +16,7 @@ const userSchema = new Schema({
             isAsync: false
         }
     },
+    // need to validate with "confirmPassword"
     password: {
         type: String,
         required: true,
@@ -32,31 +33,6 @@ const userSchema = new Schema({
         required: true,
         trim: true
     },
-    street: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    city: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    // no need to trim because of the defined input size
-    province: {
-        type: String,
-        required: true
-    },
-    // Need to validate
-    postalCode: {
-        type: String,
-        required: true
-    },
-    // Need to validate
-    telephone: {
-        type: String,
-        required: true
-    },
     // no need to strict because if it is not available,
     // will use "user!"
     alias: String,
@@ -66,7 +42,6 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'tokens'
     }]
-
 });
 
 module.exports = userSchema;
