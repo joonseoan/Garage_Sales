@@ -4,7 +4,6 @@
 2. error handling - centralized error handling
 */
 
-
 const express = require('express');
 const app = express();
 
@@ -14,7 +13,6 @@ const mongoose = require('mongoose');
 
 const bodyPaerser = require('body-parser');
 const hbs = require('express-handlebars'); 
-
 
 // to 'config' session
 const session = require('express-session');
@@ -47,8 +45,6 @@ const { pageNotFound } = require('./controllers/pageNotFound');
 // model must be prior to Schema.
 require('./models');
 
-
-
 // activate passport
 require('./services/passport_auth');
 
@@ -71,7 +67,6 @@ mongoose.connection
 })
 .on('error', e => { console.log(`Error connecting to MongoDB: ${e}`)});
 
-
 app.use(bodyPaerser.json());
 
 // // when restfulAPI without cors
@@ -84,8 +79,6 @@ app.use((req, res, next) => {
     // res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
-    
-
 
 // config session eventually to store the session data on mongodb
 app.use(session({
@@ -99,8 +92,6 @@ app.use(session({
     })
 }));
 
-
-
 // start passport
 app.use(passport.initialize());
 
@@ -111,10 +102,7 @@ app.use('/graphql', expressGraphQL({
     schema,
     graphiql: true
 }));
-
     
-
-
 // app.engine('hbs', hbs({ extname: 'hbs' }))
 
 // app.set('view engine', 'hbs');

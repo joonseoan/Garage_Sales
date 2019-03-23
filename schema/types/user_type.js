@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const graphql = require('graphql');
 const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList } = graphql;
 
+// when we would likd to tokens in UserType
 const TokenType = require('./token_type');
 const Users = mongoose.model('users');
 
@@ -18,11 +19,20 @@ const UserType = new GraphQLObjectType({
 
     // **************** must be identified with all or partly fields of mongoose schema
     //  which is a document of mongodb ***************************************
-    fields: () => ({
+
+    // we should wrap field "value" when we use "GraphQLLIST" type
+    fields: {
 
         id: { type: GraphQLID },
         email: { type: GraphQLString },
-       
+        firstName: { type: GraphQLString },
+        lastName: { type: GraphQLString },
+        alias: { type: GraphQLString },
+        
+        // Need to get lat, and lng here
+
+
+
         // address: { type: GraphQLInputObject }
         // fristName: { type: GraphQLString },
         // streetNumber: { type: GraphQLString },
@@ -39,7 +49,9 @@ const UserType = new GraphQLObjectType({
         // alias: { type: GraphQLString }
         // tokens:  { 
 
-        //     // I thin role of GraphQLList here "mpa()""
+        // ----------------------------- When we need to use populate -----------------------------
+
+        //     // I thinK it is a main role of GraphQLList here "mpa()""
         //     type : new GraphQLList(TokenType),
         //     resolve(parentValue) {
         //         return Users.
@@ -51,7 +63,7 @@ const UserType = new GraphQLObjectType({
 
         // }
 
-    })
+    }
 
 });
 

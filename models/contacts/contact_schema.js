@@ -44,4 +44,4 @@ const contactSchema = new Schema({
     
 });
 
-module.exports = mongoose.model('addresses', contactSchema);
+module.exports = contactSchema;
