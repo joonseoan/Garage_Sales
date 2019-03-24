@@ -43,14 +43,19 @@ contactSchema.methods.createCoordinates = async function() {
             &address=${ streetNumber }+${ streetName }+${ city }+${ province }+${ postalCode }+canada`);
      
         if(response.data.status === 'ZERO_RESULTS') throw new Error('Invalid Address');
+
+        console.log('must not work in invalid address')
+
+        // for me....I need to remove this one at the production state
         if(response.data.status === 'OVER_QUERY_LIMIT') throw new Error(response.data.message);
 
         contact.lat = response.data.results[0].geometry.location.lat;
         contact.lng = response.data.results[0].geometry.location.lng;
         
-        const result = await contact.save();
-
-        if(!result) throw new Error('Invalid Address');
+        // const result = await contact.save();
+        
+        // To double check the address with user
+        return response.data.results[0].formatted_address;
 
     } catch(e) {
         throw new Error(e || 'Unable to finish having geocode data.');
