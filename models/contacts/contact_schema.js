@@ -5,10 +5,10 @@ const { Schema } = mongoose;
 
 const contactSchema = new Schema({
 
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'users'
-    },
+    // user: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'users'
+    // },
     streetNumber: {
         type: String,
         required: true,
@@ -42,6 +42,8 @@ const contactSchema = new Schema({
     lat: Number,
     lng: Number
     
+}, {
+    timestamps: true
 });
 
 module.exports = contactSchema;

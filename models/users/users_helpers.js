@@ -70,10 +70,10 @@ userSchema.methods.generateAuthToken = async function () {
         // In MongoDB, we need to separately deal with class instance and database.
         //  However, in mongoose, we just need to manipulate class intance(Schema)
         //  then the schema will directly manage database.
-        const newToken = await new Tokens({token, access, user: user._id }).save();
+        const newToken = new Tokens({token, access, user: user._id });
         if(!newToken) throw new Error('Unable to generatea a new token');
 
-        console.log('MUST NOT SHOW UP IN CONSOLE.')
+        await newToken.save();
 
         user.tokens = [ ...user.tokens, newToken._id ];
 

@@ -14,6 +14,8 @@ const tokenSchema = new Schema({
         // confirm it is model name!!!!
         ref: 'users'
     }
+}, {
+    timestamps: true
 });
 
 module.exports = tokenSchema;

@@ -5,18 +5,13 @@ const Contacts = mongoose.model('contacts');
 
 module.exports = async function ({ email, password, req }) {
 
-    const { 
-        user: { firstName, lastName, alias }
-        // contact: {
-        //     streetNumber, streetName, city, province, postalFirst, postalSecond, telephone
-        // } 
-    } = req.body.variables;
-    // const { streetNumber, streetName, city, province, postalFirst, postalSecond, telephone } = contact;
+    const { firstName, lastName, alias} = req.body.variables;
     
     try {
 
          // if(!email || !password) throw new Error();
-         if(!email || !password) throw new Error('You must provide an email and a password');
+         if(!email || !password || !firstName || !lastName) 
+            throw new Error('You must provide an email and a password');
         
          const existingUser = await Users.findOne({ email });
      
@@ -30,7 +25,7 @@ module.exports = async function ({ email, password, req }) {
             firstName,
             lastName, 
             alias: alias || 'Neighbor'
-        })
+        });
 
         // if(!user) throw new Error('Unable to save user.');
 

@@ -41,7 +41,13 @@ const userSchema = new Schema({
     tokens: [{
         type: Schema.Types.ObjectId,
         ref: 'tokens'
-    }]
+    }],
+    conatact: {
+        type: Schema.Types.ObjectId,
+        ref: 'contacts'
+    }
+}, {
+    timestamps: true
 });
 
 module.exports = userSchema;

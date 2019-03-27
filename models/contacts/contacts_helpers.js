@@ -52,7 +52,8 @@ contactSchema.methods.createCoordinates = async function() {
         contact.lat = response.data.results[0].geometry.location.lat;
         contact.lng = response.data.results[0].geometry.location.lng;
         
-        // const result = await contact.save();
+        const result = await contact.save();
+        if(!result) throw new Error('Unable to save contact Info.');
         
         // To double check the address with user
         return response.data.results[0].formatted_address;

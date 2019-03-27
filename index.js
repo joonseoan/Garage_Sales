@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 // app.use(cors());
 
 const bodyPaerser = require('body-parser');
-const hbs = require('express-handlebars'); 
+// const hbs = require('express-handlebars'); 
 
 // to 'config' session
 const session = require('express-session');
@@ -27,9 +27,10 @@ const expressGraphQL = require('express-graphql');
 // const cors = require('cors');
 
 const { mongoURI, sessionSecret } = require('./config/dev');
-const { pageNotFound } = require('./controllers/pageNotFound');
+// const { pageNotFound } = require('./controllers/pageNotFound');
 
-// When graphql
+// When using cors()
+// But it is not recommended.
 // app.use(cors());
 
 // app.use(bodyPaerser.urlencoded({ extended: false }));
@@ -70,15 +71,15 @@ mongoose.connection
 app.use(bodyPaerser.json());
 
 // // when restfulAPI without cors
-app.use((req, res, next) => {
-    // Access-Control-Allow-Origin: set up that client allows cross origin resource sharing
-    //  "*":  any clients or we can specify like "codepen.io"
-    // res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, POST, DELETE');
-    // make the client set Content-Type and Authorization (to be discussed)
-    // res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
+// app.use((req, res, next) => {
+//     // Access-Control-Allow-Origin: set up that client allows cross origin resource sharing
+//     //  "*":  any clients or we can specify like "codepen.io"
+//     // res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, POST, DELETE');
+//     // make the client set Content-Type and Authorization (to be discussed)
+//     // res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//     next();
+// });
 
 // config session eventually to store the session data on mongodb
 app.use(session({
@@ -102,6 +103,14 @@ app.use('/graphql', expressGraphQL({
     schema,
     graphiql: true
 }));
+
+// Only in restful api or legacy routes
+// app.use((error, req, res, next) => {
+//     console.log(error);
+//     const status = error.statusCode || 500;
+//     const message = error.message;
+//     res.status(status).json({ message });
+// });
     
 // app.engine('hbs', hbs({ extname: 'hbs' }))
 
