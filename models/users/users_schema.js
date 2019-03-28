@@ -42,7 +42,7 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'tokens'
     }],
-    conatact: {
+    contact: {
         type: Schema.Types.ObjectId,
         ref: 'contacts'
     }

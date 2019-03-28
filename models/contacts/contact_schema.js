@@ -5,10 +5,10 @@ const { Schema } = mongoose;
 
 const contactSchema = new Schema({
 
-    // user: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'users'
-    // },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    },
     streetNumber: {
         type: String,
         required: true,

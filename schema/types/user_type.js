@@ -28,29 +28,8 @@ const UserType = new GraphQLObjectType({
         firstName: { type: GraphQLString },
         lastName: { type: GraphQLString },
         alias: { type: GraphQLString },
-        
-        // Need to get lat, and lng here
-
-
-
-        // address: { type: GraphQLInputObject }
-        // fristName: { type: GraphQLString },
-        // streetNumber: { type: GraphQLString },
-        // streetName: { type: GraphQLString }
-      
-        //password: { type: GraphQLString }
-        // firstName: { type: GraphQLString },
-        // lastName: { type: GraphQLString },
-        // street: { type: GraphQLString },
-        // city: { type: GraphQLString },
-        // province: { type: GraphQLString },
-        // postalCode: { type: GraphQLString },
-        // telephone: { type: GraphQLString },
-        // alias: { type: GraphQLString }
-        // tokens:  { 
-
         // ----------------------------- When we need to use populate -----------------------------
-
+        // tokens:  { 
         //     // I thinK it is a main role of GraphQLList here "mpa()""
         //     type : new GraphQLList(TokenType),
         //     resolve(parentValue) {

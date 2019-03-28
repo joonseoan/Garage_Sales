@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
 const axios = require('axios');
 
 const contactSchema = require('./contact_schema');
 const { googleGeoKey } = require('../../config/keys');
 
 contactSchema.methods.createCoordinates = async function() {
-    
-    
+
     // ********************************************
     /* 
         // ref : user
@@ -32,10 +32,9 @@ contactSchema.methods.createCoordinates = async function() {
         [0]   __v: 0 }
     
     */
-    console.log('this: ', this)
     
     const contact = this;
-    const { streetNumber, streetName, city, province, postalCode } = contact;
+    const { streetNumber, streetName, city, province, postalCode, userId } = contact;
 
     try {
 
@@ -44,16 +43,21 @@ contactSchema.methods.createCoordinates = async function() {
      
         if(response.data.status === 'ZERO_RESULTS') throw new Error('Invalid Address');
 
-        console.log('must not work in invalid address')
-
         // for me....I need to remove this one at the production state
         if(response.data.status === 'OVER_QUERY_LIMIT') throw new Error(response.data.message);
 
         contact.lat = response.data.results[0].geometry.location.lat;
         contact.lng = response.data.results[0].geometry.location.lng;
-        
-        const result = await contact.save();
-        if(!result) throw new Error('Unable to save contact Info.');
+ 
+        const updatedContact = await contact.save();
+        if(!updatedContact) throw new Error('Unable to save contact Info.');
+
+        const Users = mongoose.model('users');
+        const user = await Users.findById(userId);
+        user.contact = updatedContact._id;
+
+        const updatedUser = await user.save();
+        if(!updatedUser) throw new Error('Unable to add contact to the user.');
         
         // To double check the address with user
         return response.data.results[0].formatted_address;

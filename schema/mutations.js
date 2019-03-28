@@ -12,7 +12,6 @@ const { signup, login } = require('../services/passport_auth');
 // UserType === instance of 'users' model
 const mutation = new GraphQLObjectType({
     name: 'Mutation',
-
     fields: {
         // add data
         signup: {
@@ -56,30 +55,31 @@ const mutation = new GraphQLObjectType({
         },
         createContact: {
             type: ContactType,
-            resolve(parentValue, req) {
+            resolve(parentValue, args, req) {
 
-                console.log(req)
+                const { streetNumber, streetName, city, province, postalFirst, postalSecond, telephone } = req.body.variables.contact
+                if(!req.user) throw new Error('The user must login.');
+                
+                const Contacts = mongoose.model('contacts');
+                const contact = new Contacts({
+                    userId: req.user._id,
+                    streetNumber,
+                    streetName,
+                    city,
+                    province,
+                    postalCode: postalFirst + ' ' + postalSecond,
+                    telephone
+                });
 
-                // const { streetNumber, streetName, city, province, postalFirst, postalSecond, telephone } = req.body.variables
-
-                // // console.log('req.user at createContact', req.user);
-                // const Contacts = mongoose.model('contacts');
-
-                // const contact = new Contacts({
-
-                //     // user: req.user._id,
-                //     streetNumber,
-                //     streetName,
-                //     city,
-                //     province,
-                //     postalCode: postalFirst + ' ' + postalSecond,
-                //     telephone
-
-                // });
-
-                // console.log('googleAddress: ', contact.createCoordinates());
-                // return contact.createCoordinates();
-
+                return contact.createCoordinates()
+                    .then(address => {
+                        if(!address) throw new Error('Unagle to find Google address.');
+                        console.log(address);
+                        return address;
+                    })
+                    .catch(e => {
+                        throw new Error(e);
+                    });
             }
         }
     }

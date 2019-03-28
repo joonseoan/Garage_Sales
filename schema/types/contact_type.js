@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
 const graphql = require('graphql');
-const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLFloat } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLFloat, GraphQLList } = graphql;
 
 const ContactType = new GraphQLObjectType({
     name: 'ContactType',
     fields: {
+        userId: { type: GraphQLID },
         streetNumber: { type: GraphQLString },
         streetName: { type: GraphQLString },
         city: { type: GraphQLString },
@@ -12,6 +12,9 @@ const ContactType = new GraphQLObjectType({
         postalCode: { type: GraphQLString },
         lat: { type: GraphQLFloat },
         lng: { type: GraphQLFloat }
+        // coordList: {
+            
+        // }
     }
 });
 
