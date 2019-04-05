@@ -5,14 +5,11 @@ const _ = require('lodash');
 
 const userSchema = require('./users_schema');
 
-userSchema.methods.toJSON = function() {
-
-    const user = this;
-    const backToUser = user.toObject();
-
-    return _.pick(backToUser, ["_id", "email"]);
-
-};
+// userSchema.methods.toJSON = function() {
+//     const user = this;
+//     const backToUser = user.toObject();
+//     return _.pick(backToUser, ["_id", "email"]);
+// };
 
 // password from user's input which is not encrypted
 // user.password from database which is encrypted by bicrypt
@@ -36,7 +33,6 @@ userSchema.methods.comparePassword = function(password) {
     const user = this;
 
     try {
-
         return new Promise((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, isMatch) => {
                 if (isMatch) {
@@ -46,18 +42,14 @@ userSchema.methods.comparePassword = function(password) {
                 }       
              });
         });
-
     } catch(e) {
         throw new Error('Unable to identify the password.');
     }
 }
 
 userSchema.methods.generateAuthToken = async function () {
-
     const user = this;
-    
     try {
-
         const access = 'xxxx';
         const token = await jwt
             .sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET)
@@ -72,25 +64,17 @@ userSchema.methods.generateAuthToken = async function () {
         //  then the schema will directly manage database.
         const newToken = new Tokens({token, access, user: user._id });
         if(!newToken) throw new Error('Unable to generatea a new token');
-
         await newToken.save();
-
         user.tokens = [ ...user.tokens, newToken._id ];
-
-        return token;
-            
+        return token; 
     } catch(e) {
         throw new Error(e || 'Unable to generate jwt and save the user.');
     } 
-    
 }
 
 userSchema.pre('save', function(next) {
-
     const user = this;
-
     try {
-
         if(!user.isModified('password')) { 
             next();
             throw new Error('Password is modified.');
@@ -104,11 +88,9 @@ userSchema.pre('save', function(next) {
                 next();
             });
         });
-
     } catch(e) {
         throw new Error(e || 'Unable to encode the password.');
     }
-
 });
 
 mongoose.model('users', userSchema);

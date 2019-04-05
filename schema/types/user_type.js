@@ -3,8 +3,8 @@ const graphql = require('graphql');
 const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList } = graphql;
 
 // when we would likd to tokens in UserType
-const TokenType = require('./token_type');
-const Users = mongoose.model('users');
+// const TokenType = require('./token_type');
+// const Users = mongoose.model('users');
 
 // UserType: instance of GraphQLObjecType 
 //  for javascript to export / import particularly here.

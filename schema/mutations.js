@@ -4,6 +4,7 @@ const { GraphQLObjectType, GraphQLString } = graphql;
 
 const UserType = require('./types/user_type');
 const ContactType = require('./types/contact_type');
+const ProductType = require('./types/product_type');
 const { signup, login } = require('../services/passport_auth');
 
 // resolve return value is all user instance 
@@ -81,6 +82,35 @@ const mutation = new GraphQLObjectType({
                         throw new Error(e);
                     });
             }
+        },
+        createProduct: {
+            type: ProductType,
+            // args: { },
+            resolve(parentValue, args, req) {
+                const { category, name, brand, model, price, description, imagePath, imagePreview, } = req.body.variables;
+                if(!req.user) throw new Error('The user must login.');
+
+                const Products = mongoose.model('products');
+                const product = new Products({
+                    userId: req.user._id,
+                    category,
+                    name,
+                    brand,
+                    model,
+                    price,
+                    description
+                });
+
+                return product.saveProduct(imagePath || imagePreview)
+                    .then(result => {
+                        console.log(result || 'successfully saved');
+                    })
+                    .catch(e => {
+                        throw new Error(e || 'Unable to store product.');
+                    });
+                
+            }
+
         }
     }
 });

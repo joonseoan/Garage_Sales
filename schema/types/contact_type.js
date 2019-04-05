@@ -12,9 +12,6 @@ const ContactType = new GraphQLObjectType({
         postalCode: { type: GraphQLString },
         lat: { type: GraphQLFloat },
         lng: { type: GraphQLFloat }
-        // coordList: {
-            
-        // }
     }
 });
 
