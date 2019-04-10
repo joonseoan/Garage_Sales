@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const imageSchema = new Schema({
-    product: {
+    productId: {
         type: Schema.Types.ObjectId,
         ref: 'products'
     },    
-    imageUrl: {
+    imagePath: {
         type: String,
         required: true
     }

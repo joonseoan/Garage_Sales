@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const productSchema = new Schema({
-
     userId: { 
         type: Schema.Types.ObjectId,
         ref: 'users' 
@@ -35,7 +34,7 @@ const productSchema = new Schema({
         required: true,
         trim: true
     },
-    images: [{
+    imagePaths: [{
         type: Schema.Types.ObjectId,
         ref: 'products'
     }]
@@ -44,4 +43,3 @@ const productSchema = new Schema({
 });
 
 module.exports = productSchema;
-
