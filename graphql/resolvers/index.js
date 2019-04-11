@@ -1,8 +1,7 @@
 const { createProduct } = require('./mutations/createProduct');
+const { createContact } = require('./mutations/createContact');
 
-module.exports = {
-    // hello: function(parentValue, args, req) {
-    //     return 'Hello!!!'
-    // },
-    createProduct
+module.exports = { 
+    createProduct,
+    createContact
 }

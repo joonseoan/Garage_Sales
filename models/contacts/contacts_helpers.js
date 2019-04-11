@@ -34,12 +34,14 @@ contactSchema.methods.createCoordinates = async function() {
     */
     
     const contact = this;
-    const { streetNumber, streetName, city, province, postalCode, userId } = contact;
+    // const { streetNumber, streetName, city, province, userId } = contact;
+    const { streetNumber, streetName, city, province, telephone } = contact;
+
 
     try {
 
         const response = await axios(`https://maps.googleapis.com/maps/api/geocode/json?key=${ googleGeoKey }
-            &address=${ streetNumber }+${ streetName }+${ city }+${ province }+${ postalCode }+canada`);
+            &address=${ streetNumber }+${ streetName }+${ city }+${ province }+canada`);
      
         if(response.data.status === 'ZERO_RESULTS') throw new Error('Invalid Address');
 
@@ -48,19 +50,20 @@ contactSchema.methods.createCoordinates = async function() {
 
         contact.lat = response.data.results[0].geometry.location.lat;
         contact.lng = response.data.results[0].geometry.location.lng;
+        contact.googleAddress = response.data.results[0].formatted_address;
  
-        const updatedContact = await contact.save();
-        if(!updatedContact) throw new Error('Unable to save contact Info.');
+        const  userContact = await contact.save();
+        if(!userContact) throw new Error('Unable to save contact Info.');
 
-        const Users = mongoose.model('users');
-        const user = await Users.findById(userId);
-        user.contact = updatedContact._id;
+        // const Users = mongoose.model('users');
+        // const user = await Users.findById(userId);
+        // user.contact = updatedContact._id;
 
-        const updatedUser = await user.save();
-        if(!updatedUser) throw new Error('Unable to add contact to the user.');
+        // const updatedUser = await user.save();
+        // if(!updatedUser) throw new Error('Unable to add contact to the user.');
         
         // To double check the address with user
-        return response.data.results[0].formatted_address;
+        return userContact;
 
     } catch(e) {
         throw new Error(e || 'Unable to finish having geocode data.');

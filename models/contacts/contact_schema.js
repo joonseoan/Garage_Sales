@@ -30,17 +30,13 @@ const contactSchema = new Schema({
         required: true
     },
     // Need to validate
-    postalCode: {
-        type: String,
-        required: true
-    },
-    // Need to validate
     telephone: {
         type: String,
         required: true
     },
     lat: Number,
-    lng: Number
+    lng: Number,
+    googleAddress: String
     
 }, {
     timestamps: true

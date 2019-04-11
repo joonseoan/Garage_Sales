@@ -60,7 +60,7 @@ exports.createProduct = async function({
         //console.log(name, brand, model, price, ' ====================> working?')
         
         // 이걸로 받아야 하나?
-        console.log(req.body);
+        //console.log(req.body);
 
         return { name, description };
 

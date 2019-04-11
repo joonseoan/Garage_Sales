@@ -1,9 +1,6 @@
-const { buildSchema } = require('graphql');
-
 // TODO
 
 // added product id and user id
-// Products : test it again in removing "s"
 
 module.exports = `
 
