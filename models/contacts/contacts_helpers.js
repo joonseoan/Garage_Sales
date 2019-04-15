@@ -34,9 +34,7 @@ contactSchema.methods.createCoordinates = async function() {
     */
     
     const contact = this;
-    // const { streetNumber, streetName, city, province, userId } = contact;
-    const { streetNumber, streetName, city, province, telephone } = contact;
-
+    const { streetNumber, streetName, city, province, userId } = contact;
 
     try {
 
@@ -55,14 +53,13 @@ contactSchema.methods.createCoordinates = async function() {
         const  userContact = await contact.save();
         if(!userContact) throw new Error('Unable to save contact Info.');
 
-        // const Users = mongoose.model('users');
-        // const user = await Users.findById(userId);
-        // user.contact = updatedContact._id;
+        const Users = mongoose.model('users');
+        const user = await Users.findById(userId);
+        user.contact = userContact;
 
-        // const updatedUser = await user.save();
-        // if(!updatedUser) throw new Error('Unable to add contact to the user.');
+        const updatedUser = await user.save();
+        if(!updatedUser) throw new Error('Unable to add contact to the user.');
         
-        // To double check the address with user
         return userContact;
 
     } catch(e) {

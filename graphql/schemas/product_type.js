@@ -5,7 +5,6 @@
 module.exports = `
 
     type Images {
-        productId: String!
         imagePath: String!
     }
 
@@ -16,7 +15,7 @@ module.exports = `
         model: String!
         price: Float!
         description: String!
-        imagePaths: [Images]
+        imagePaths: [Images!]!
         createdAt: String!
         updatedAt: String!
     }
@@ -28,6 +27,6 @@ module.exports = `
         model: String!
         price: Float!
         description: String!
-        imagePath: String
+        imagePaths: [ Images! ]!
     }
 `;

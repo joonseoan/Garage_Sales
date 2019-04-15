@@ -1,8 +1,8 @@
 const { buildSchema } = require('graphql');
-const { authMessage } = require('./message_typ');
-const products = require('./product_type');
-const contacts = require('./contact_type');
-const users = require('./user_type');
+const { authMessage } = require('./schemas/message_typ');
+const products = require('./schemas/product_type');
+const contacts = require('./schemas/contact_type');
+const users = require('./schemas/user_type');
 
 module.exports = buildSchema(`
 
@@ -13,13 +13,13 @@ module.exports = buildSchema(`
             users,
         `
         type RootQuery {
-            getCurrentUser: Users
+            getCurrentUser: Users!
             getCoords: [Contacts!]!
         }
 
         type RootMutation {
             createProduct(productInput: ProductInput!): Products!
-            createContact(contactInput: ContactInput!): Contacts
+            createContact(contactInput: ContactInput!): Contacts!
             signup(userInput: UserInput!): AuthMessage!
             logout: AuthMessage!
             login: AuthMessage!

@@ -1,11 +1,6 @@
-/* 
-[ Todo list]
-1. validate - schema data
-2. error handling - centralized error handling
-*/
-
 const express = require('express');
 const app = express();
+const path = require('path');
 
 const mongoose = require('mongoose');
 // const cors = require('cors');
@@ -18,6 +13,9 @@ const bodyPaerser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
+const uuidv4 = require('uuid/v4');
+const multer = require('multer');
+
 const expressGraphQL = require('express-graphql');
 
 // Not easily working: we should use proxy,*****************************
@@ -49,13 +47,16 @@ require('./models');
 // activate passport
 require('./services/passport_auth');
 
+// [ cunstructor ]
+// const schema = require('./schema/schema'); 
+
+// [ buildSchema ]
 const schemas = require('./graphql/schemas');
 const resolvers = require('./graphql/resolvers');
 
 if (!mongoURI) {
     throw new Error('You must provide a MongoLab URI');
 }
-
 
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoURI, { useCreateIndex: true, useNewUrlParser: true });
@@ -67,6 +68,11 @@ mongoose.connection
     }); 
 })
 .on('error', e => { console.log(`Error connecting to MongoDB: ${e}`)});
+
+
+
+
+
 
 app.use(bodyPaerser.json());
 
@@ -99,11 +105,45 @@ app.use(passport.initialize());
 // connect passport to session
 app.use(passport.session()); 
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 // [ GraphQLObjectType Base ]
 // app.use('/graphql', expressGraphQL({
 //     schema,
 //     graphiql: true
 // }));
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        console.log('file: ', file)
+        cb(null, 'images');
+    },
+    filename: (req, files, cb) => {
+        cb(null, uuidv4());
+    }
+});
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+};
+// "product" : body.append('product', this.state.imagePaht)
+const upload = multer({ storage, fileFilter}).array('productImages', 4);
+app.put('/uploadImages', (req, res, next) => {
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+          throw new Error ('Error during uploading files. By any chande, did you put more than 4 files?');
+        } else if (err) {
+          throw new Error('Failed to upload files');
+        }
+        return res.status(200).json({
+            message: 'successfully uploaded.',
+            filePaths: req.files.map(file => file.path.replace('\\', '/'))
+        });
+      })
+});
 
 // [ GraphQL String Base ]
 app.use('/graphql', expressGraphQL({

@@ -11,11 +11,12 @@ exports.createContact = async function({
         telephone
     }
 }, req) {
-
-        // if(!req.user) throw new Error('The user must login.');
+        if(!req.user) throw new Error('You are not log-in user.');
+        if(req.user.contact) throw new Error('Your address already exists.');
+        // need to create address update also.
         const Contacts = mongoose.model('contacts');
         const contact = new Contacts({
-            // userId: req.user._id,
+            userId: req.user,
             streetNumber,
             streetName,
             city,
@@ -23,13 +24,12 @@ exports.createContact = async function({
             telephone
         });
 
-        let userContact;
         try{
-            userContact = await contact.createCoordinates();
+            const userContact = await contact.createCoordinates();
+            // need to confirm google Address. Yes => save, No => input window again.
             if(!userContact) throw new Error('Unable to get Goole data.');
+            return _.pick(userContact._doc, 'telephone', 'lat', 'lng', 'googleAddress');   
         } catch(e) {
             throw new Error(e || 'Failed to get user contact. ');
         }
-        
-        return _.pick(userContact._doc, 'telephone', 'lat', 'lng', 'googleAddress');   
 }

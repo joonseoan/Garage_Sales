@@ -54,7 +54,7 @@ const mutation = new GraphQLObjectType({
                 return login({ email, password, req });
             }
         },
-        createContact: {
+        createContact: async () => ({
             type: ContactType,
             resolve(parentValue, args, req) {
 
@@ -71,18 +71,22 @@ const mutation = new GraphQLObjectType({
                     postalCode: postalFirst + ' ' + postalSecond,
                     telephone
                 });
+                
+                return await contact.createContact();
 
-                return contact.createCoordinates()
-                    .then(address => {
-                        if(!address) throw new Error('Unagle to find Google address.');
-                        console.log(address);
-                        return address;
-                    })
-                    .catch(e => {
-                        throw new Error(e);
-                    });
+            
+
+                // return contact.createCoordinates()
+                //     .then(address => {
+                //         if(!address) throw new Error('Unagle to find Google address.');
+                //         console.log(address);
+                //         return address;
+                //     })
+                //     .catch(e => {
+                //         throw new Error(e);
+                //     });
             }
-        }
+        })
         // createProduct: {
         //     type: ProductType,
         //     // args: { },

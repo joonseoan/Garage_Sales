@@ -8,10 +8,12 @@ exports.createProduct = async function({
             model,
             price,
             description,
-            imagePath            
+            imagePaths           
         }
     }, req) {
 
+        
+        console.log('imagePaths: ', req.body)
         console.log('wwwwwwwwwwwwwwwwwww')
         // const errors = [];
         // if(!validator.isEmail(email)) {

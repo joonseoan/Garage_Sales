@@ -12,12 +12,12 @@ const RootQueryType = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: () => ({
         // queryName
-        user: {
+        getCurrentUser: {
             
             // RootQueryType's Target Schema( or Classs
             type : UserType,
             resolve(parentValue, args, req) {
-
+                console.log(req.user)
                 // simply return user in req.
                 // if user in req is not available return 'null'
                 return req.user;

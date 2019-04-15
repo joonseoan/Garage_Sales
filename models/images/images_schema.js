@@ -6,10 +6,10 @@ const imageSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'products'
     },    
-    imagePath: {
+    imagePaths: [{ 
         type: String,
         required: true
-    }
+    }] 
 });
 
 module.exports = imageSchema;

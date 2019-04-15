@@ -74,23 +74,21 @@ userSchema.methods.generateAuthToken = async function () {
 
 userSchema.pre('save', function(next) {
     const user = this;
-    try {
-        if(!user.isModified('password')) { 
-            next();
-            throw new Error('Password is modified.');
-        }
-        
-        bcrypt.genSalt(10, (err, salt) => {
-            if(err) return next(err);
-            bcrypt.hash(user.password, salt, (err, hash) => {
-                if(err) return next(err);
-                user.password = hash;
-                next();
-            });
-        });
-    } catch(e) {
-        throw new Error(e || 'Unable to encode the password.');
+    
+    if(!user.isModified('password')) { 
+        next();
+        throw new Error('Password is modified.');
     }
+    
+    bcrypt.genSalt(10, (err, salt) => {
+        if(err) return next(err);
+        bcrypt.hash(user.password, salt, (err, hash) => {
+            if(err) return next(err);
+            user.password = hash;
+            next();
+        });
+    });
+
 });
 
 mongoose.model('users', userSchema);

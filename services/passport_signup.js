@@ -5,6 +5,8 @@ const Contacts = mongoose.model('contacts');
 
 module.exports = async function ({ email, password, req }) {
 
+
+
     const { firstName, lastName, alias} = req.body.variables;
     
     try {
@@ -48,9 +50,6 @@ module.exports = async function ({ email, password, req }) {
     } catch(e) {
         throw new Error(e);
     }
-
-
-    
 // contact
 // --------------------------------------------------------------------------------------------------
         // const contact = await new Contacts({ 

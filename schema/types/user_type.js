@@ -23,7 +23,7 @@ const UserType = new GraphQLObjectType({
     // we should wrap field "value" when we use "GraphQLLIST" type
     fields: {
 
-        id: { type: GraphQLID },
+        _id: { type: GraphQLID },
         email: { type: GraphQLString },
         firstName: { type: GraphQLString },
         lastName: { type: GraphQLString },
