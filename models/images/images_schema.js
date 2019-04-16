@@ -7,8 +7,7 @@ const imageSchema = new Schema({
         ref: 'products'
     },    
     imagePaths: [{ 
-        type: String,
-        required: true
+        type: String
     }] 
 });
 

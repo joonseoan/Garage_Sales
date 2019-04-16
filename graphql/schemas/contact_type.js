@@ -16,11 +16,3 @@ module.exports = `
         telephone: String
     }
 `;
-
-/* 
-streetNumber: String!
-        streetName: String!
-        city: String!
-        province: String!
-
-*/

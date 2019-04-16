@@ -70,10 +70,6 @@ mongoose.connection
 .on('error', e => { console.log(`Error connecting to MongoDB: ${e}`)});
 
 
-
-
-
-
 app.use(bodyPaerser.json());
 
 // // when restfulAPI without cors
@@ -115,7 +111,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log('file: ', file)
+        // console.log('file: ', file)
         cb(null, 'images');
     },
     filename: (req, files, cb) => {
@@ -140,7 +136,9 @@ app.put('/uploadImages', (req, res, next) => {
         }
         return res.status(200).json({
             message: 'successfully uploaded.',
-            filePaths: req.files.map(file => file.path.replace('\\', '/'))
+            // just for testing about plain object
+            // imagePaths: { imagePaths: 'aaaaaa' }
+            imagePaths: req.files.map(file => file.path.replace('\\', '/'))
         });
       })
 });

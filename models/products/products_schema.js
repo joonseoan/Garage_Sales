@@ -34,10 +34,10 @@ const productSchema = new Schema({
         required: true,
         trim: true
     },
-    imagePaths: [{
+    images: {
         type: Schema.Types.ObjectId,
-        ref: 'products'
-    }]
+        ref: 'images'
+    }
 }, {
     timestamps: true
 });
