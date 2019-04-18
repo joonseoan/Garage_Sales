@@ -15,6 +15,7 @@ module.exports = buildSchema(`
         type RootQuery {
             getCurrentUser: Users
             getCoords: [Contacts!]!
+            getImageList: [Images!]!
         }
 
         type RootMutation {
