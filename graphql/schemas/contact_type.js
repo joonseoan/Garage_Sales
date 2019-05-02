@@ -1,6 +1,6 @@
 module.exports = `
     type Contacts {
-        userId: String!
+        userId: ID!
         telephone: String!
         lat: Float!
         lng: Float!
